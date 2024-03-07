@@ -4,16 +4,19 @@
 #
 
 import urllib.request 
+import json
 
 def printResults(data):
     # Use the json module to load the string data into a dictionary
     theJSON = json.loads(data)
     
     # now we can access the contents of the JSON like any other Python object
-
+    if "title" in theJSON['metadata']:
+        print(theJSON['metadata']["title"])
     
     # output the number of events, plus the magnitude and each event name  
-
+    if ("count" in theJSON['metadata']):
+        print(str(theJSON['metadata']["count"]) + " events recorded")
     
     # for each event, print the place where it occurred
 
@@ -33,7 +36,12 @@ def main():
     # Open the URL and read the data
     webUrl = urllib.request.urlopen(urlData)
     print ("result code: " + str(webUrl.getcode()))
-  
+    
+    if (webUrl.getcode() == 200):
+        data = webUrl.read()
+        printResults(data)
+    else:
+        print("Received an error from server, cannot retrieve results " + str(webUrl.getCode()))
 
 if __name__ == "__main__":
     main()
